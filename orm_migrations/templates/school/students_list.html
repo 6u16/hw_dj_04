@@ -1,0 +1,23 @@
+{% extends "school/base.html" %}
+{% load static %}
+
+{% block title %}Список учеников{% endblock %}
+{% block content %}
+<div class="row">
+  <ul>
+  {% for student in object_list %}
+    <li>
+      {{ student.name }} {{ student.group }} <br> Преподаватель:</br>
+      <br>{% for teacher in student.teachers.all %}
+        <p>{{ teacher.name }}: {{ teacher.subject }}</p></br>
+      {% endfor %}
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+    {% comment %} ПОЧЕМУ МЫ ИСПОЛЬЗУЕМ ВЛОЖЕННЫЙ ЦИКЛ??? {% endcomment %}
+    {% comment %} Очень важно!!: Если бы мы использовали просто связь один ко многим через внешний ключ Foreign Key то можно было бы обойтись одним циклом
+    и достать сразу то что нам было нужно, пример: order.positions.product.name, Но так как мы используем связь многие ко многим ManyTo Many Field то необходим
+    вложеный цикл чтобы достать то что нам нужно!!!{% endcomment %}
