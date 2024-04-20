@@ -10,14 +10,13 @@ from .models import Article, Tag, Scope
 # переопределением метода clean, указанного в качестве formset класса:
 class RelationshipInlineFormset(BaseInlineFormSet):
     def clean(self):
+        i_cnt:int = 0
         for form in self.forms:
-            # В form.cleaned_data будет словарь с данными
-            # каждой отдельной формы, которые вы можете проверить
-            form.cleaned_data
-            # вызовом исключения ValidationError можно указать админке о наличие ошибки
-            # таким образом объект не будет сохранен,
-            # а пользователю выведется соответствующее сообщение об ошибке
-            raise ValidationError('Основной тег может быть только один')
+            print(form.cleaned_data)  # словарь с данными тегов каждой отдельной формы
+            if form.cleaned_data.get('is_main') == True: i_cnt += 1
+            if i_cnt > 1: raise ValidationError('Основной тег может быть только один')  # Исключение ValidationError остановит цикл и в админке укажет текст ошибки валидации
+            if i_cnt == 0: raise ValidationError('Укажите основной тег поставив галочку')
+            # таким образом объект не будет сохранен
         return super().clean()  # вызываем базовый код переопределяемого метода
 
 
